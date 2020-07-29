@@ -25,8 +25,12 @@ const userSchema = new Schema({
   },
   passwordConfirm: {
     type: String,
-    validate: (el) => {
-      return el === this.password;
+    required: [true, 'Password confirm field is required'],
+    validate: {
+      validator: function (el) {
+        return el === this.password;
+      },
+      message: 'Password should be same',
     },
   },
 });
