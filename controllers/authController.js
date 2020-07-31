@@ -61,7 +61,7 @@ exports.signup = catchAsync(async (req, res, next) => {
   )}/api/v1/users/email-verify/${EmailVerifyToken}`;
 
   //send verification email
-  await new Email(newUser, url).sendEmailVerify();
+  //await new Email(newUser, url).sendEmailVerify();
 
   res.status(200).json({
     url,
@@ -92,12 +92,17 @@ exports.verifyEmail = catchAsync(async (req, res, next) => {
   }
 
   //if already verifies
-  if ((currentUser.emailVerified = true)) {
+  if (currentUser.emailVerified === true) {
     return next(new AppError('Already verified', 401));
+  }
+
+  if (currentUser.expire_at <= Date.now()) {
+    return next(new AppError('Time expired', 401));
   }
 
   //set verification to true;
   currentUser.emailVerified = true;
+  currentUser.expire_at = undefined;
   await currentUser.save({ validateBeforeSave: false });
   res.send('User verified');
 });

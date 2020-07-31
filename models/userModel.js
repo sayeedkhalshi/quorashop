@@ -59,7 +59,12 @@ const userSchema = new Schema({
   passwordResetExpires: Date,
   createdAt: {
     type: Date,
-    default: Date.now(),
+    default: Date.now,
+  },
+  expire_at: {
+    type: Date,
+    default: Date.now,
+    expires: 86400,
   },
 });
 
@@ -81,7 +86,7 @@ userSchema.pre('save', function (next) {
 
 userSchema.pre(/^find/, function (next) {
   // this points to the current query
-  this.find({ active: { $ne: false } });
+  this.find({ active: { $ne: false }, emailVerified: { $ne: false } });
   next();
 });
 
