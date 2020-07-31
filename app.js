@@ -15,6 +15,8 @@ const app = express();
 
 //link to routes
 const userRoutes = require('./routes/userRoutes');
+const productRoutes = require('./routes/productRoutes');
+const categoryRoutes = require('./routes/categoryRoutes');
 
 app.enable('trust-proxy');
 
@@ -59,7 +61,8 @@ app.use(compression());
 
 //set route
 app.use('/api/v1/users', userRoutes);
-
+app.use('/api/v1/products', productRoutes);
+app.use('/api/v1/categories', categoryRoutes);
 //404
 app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
